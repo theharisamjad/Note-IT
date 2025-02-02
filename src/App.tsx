@@ -18,7 +18,7 @@ useEffect(() => {
   async function prepare() {  
     try {  
       // Artificial delay for two seconds, remove in production code  
-      await new Promise(resolve => setTimeout(resolve, 10000));  
+    
     } catch (e) {  
       console.warn(e);  
     } finally {  
