@@ -1,36 +1,24 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, FlatList, StyleSheet } from 'react-native';
+import { FAB } from 'react-native-paper';
+import {useStore} from '../../store';
 
+const TodoApp: React.FC = () => {
+  const [text, setText] = useState<string>('');
+  const { todos, loadTodos, addTodo, toggleTodo, deleteTodo } = useStore();
 
-type HomeScreenProps = {
-  navigation: StackNavigationProp<any, any>;
-};
-
-const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
+  // Load todos from AsyncStorage on component mount
+  
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
+     
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
+  container: { padding: 20, flex: 1 },
+ 
 });
 
-export default Home;
+export default TodoApp;
