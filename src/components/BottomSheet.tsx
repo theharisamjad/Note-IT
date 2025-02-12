@@ -31,16 +31,9 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetComponentProps>(
         enablePanDownToClose // Allow closing by swiping down
         {...props} // Pass any additional props to the BottomSheet
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardAvoidingView}
-        >
-          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <BottomSheetView style={styles.bottomSheetContent}>
-              {children}
-            </BottomSheetView>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+        <BottomSheetView style={styles.bottomSheetContent}>
+          {children}
+        </BottomSheetView>
       </BottomSheet>
     );
   }
@@ -57,7 +50,7 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
-    width: "100%",
+    // width: "100%",
   },
 });
 

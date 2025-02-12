@@ -4,6 +4,6 @@ export const colors = {
     primaryText: '#272727',
     secondaryColorText: '#F0F0F0',
     white: '#FFFFFF',
-    
+    seafoamGreen: '#8FBC8F',
 
 }

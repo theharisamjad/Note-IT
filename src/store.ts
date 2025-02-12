@@ -14,8 +14,9 @@ const store: StateCreator<TodoStore> = (set, get) => ({
       console.error('Failed to load todos:', error);
     }
   },
-  addTodo: async (text: string) => {
-    const newTodo: Todo = { id: Date.now(), text, completed: false };
+  addTodo: async (Todoitem: Todo) => {
+    const {id, title, description , dateString  } = Todoitem
+    const newTodo: Todo = { id, title ,  description, dateString, completed: false };
     const updatedTodos = [...get().todos, newTodo];
     set({ todos: updatedTodos });
     await AsyncStorage.setItem('todos', JSON.stringify(updatedTodos));

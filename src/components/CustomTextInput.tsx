@@ -10,6 +10,7 @@ type TextInputProps = {
   placeholder: string;
   multiline?: boolean;
   style?: StyleProp<TextStyle>;
+  error?: boolean;
 };
 const CustomTextInput: React.FC<TextInputProps> = ({
   value,
@@ -17,6 +18,7 @@ const CustomTextInput: React.FC<TextInputProps> = ({
   placeholder,
   multiline,
   style,
+  error,
   ...props
 }) => {
   return (

@@ -1,9 +1,16 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import Modal from "react-native-modal";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { colors } from "../constants/colors";
 import { fonts } from "../constants/fonts";
+import { verticalScale } from "react-native-size-matters";
 
 // Optional: Configure calendar locale (e.g., for month/day names)
 LocaleConfig.locales["en"] = {
@@ -90,6 +97,7 @@ const CalendarModal = ({
             textDisabledColor: "#d9e1e8",
           }}
           onDayPress={handleDayPress}
+          minDate={new Date().toDateString()}
           markedDates={{
             [selectedDate || ""]: {
               selected: true,
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 20, // Rounded corners
     padding: 20,
-    width: "90%", // Set width of the modal
+    width: Dimensions.get("window").width * 0.8,
     alignItems: "center",
   },
   title: {
@@ -124,7 +132,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   calendar: {
-    width: "100%",
+    width: Dimensions.get("window").width * 0.8,
+    height: Dimensions.get("window").height * 0.4, // Set a fixed height for the calendar
     marginBottom: 20,
   },
   closeButton: {
