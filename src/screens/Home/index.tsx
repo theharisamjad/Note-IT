@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
-import { FAB } from "react-native-paper";
-import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
+import { Button, FAB, TextInput } from "react-native-paper";
+import { verticalScale, moderateScale } from "react-native-size-matters";
 import { margins, sizes } from "../../constants/sizes";
 import { useStore } from "../../store";
 import { colors } from "../../constants/colors";
@@ -16,6 +9,12 @@ import UnionImage from "../../assets/images/union.svg";
 import FilterImage from "../../assets/images/filter.svg";
 import DueImage from "../../assets/images/clock.svg";
 import { fonts } from "../../constants/fonts";
+import { StackNavigationProp } from "@react-navigation/stack";
+import CustomBottomSheet from "../../components/BottomSheet";
+import BottomSheet from "@gorhom/bottom-sheet";
+import CustomTextInput from "../../components/CustomTextInput";
+import CalendarModal from "../../components/CalendarModal";
+import CustomTouchableInput from "../../components/CustomTouchableInput";
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,13 +36,40 @@ const listItems = [
   },
 ];
 
-const Home: React.FC = () => {
-  const [text, setText] = useState<string>("");
+type HomeScreenProps = {
+  navigation: StackNavigationProp<any, any>;
+};
+
+const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const openModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+    closeModal(); // Close the modal after selecting a date
+  };
+
+  // Function to open the bottom sheet
+  const openBottomSheet = () => {
+    bottomSheetRef.current?.expand();
+  };
+
   const [dummyList, setDummyList] = useState(listItems);
   const { todos, loadTodos, addTodo, toggleTodo, deleteTodo } = useStore();
 
   const TodoItem = (todo: any) => {
-    console.log(todo);
     return (
       <View
         style={[
@@ -69,35 +95,98 @@ const Home: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.rowContainer, styles.rowBottomMargin]}>
-        <View style={styles.rowOnly}>
-          <UnionImage />
-          <Text style={styles.listTodoHeading}>LIST OF TODO</Text>
-        </View>
-        <FilterImage />
-      </View>
-      <FlatList
-        data={dummyList}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <TodoItem {...item} />}
+      <CalendarModal
+        isVisible={isModalVisible}
+        onClose={closeModal}
+        onDateSelect={handleDateSelect}
       />
-
+      <View style={styles.padding15}>
+        <View style={[styles.rowContainer, styles.rowBottomMargin]}>
+          <View style={styles.rowOnly}>
+            <UnionImage />
+            <Text style={styles.listTodoHeading}>LIST OF TODO</Text>
+          </View>
+          <FilterImage />
+        </View>
+        <FlatList
+          data={dummyList}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <TodoItem {...item} />}
+        />
+      </View>
       {/* Floating Action Button */}
       <FAB
         style={styles.fab}
         icon="plus"
+        color={colors.white}
         rippleColor={"rgba(0, 0, 0, 0.1)"}
-        onPress={() => console.log("add")}
+        onPress={openBottomSheet}
       />
+
+      <CustomBottomSheet
+        index={0}
+        ref={bottomSheetRef}
+        backgroundStyle={{ backgroundColor: colors.primaryColor }}
+        handleIndicatorStyle={{
+          backgroundColor: colors.white,
+          width: width * 0.2,
+        }}
+      >
+        <View style={{ width: width * 0.92, flex: 1 }}>
+          <CustomTextInput
+            placeholder="Title"
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+          />
+
+          <CustomTextInput
+            placeholder="Description"
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+            multiline
+            style={{ height: height * 0.5 }}
+          />
+
+          <CustomTouchableInput
+            label={selectedDate ? selectedDate : "Deadline (Optional)"}
+            onPress={openModal}
+            iconName="calendar" // Icon on the right
+            iconColor={colors.white}
+          />
+
+          <Button
+            mode="contained"
+            onPress={() => setIsModalVisible(true)}
+            buttonColor={colors.white}
+            textColor={colors.primaryColor}
+            labelStyle={{ fontFamily: fonts.regular }}
+            style={styles.button}
+          >
+            ADD TODO
+          </Button>
+        </View>
+      </CustomBottomSheet>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
     flex: 1,
     backgroundColor: colors.white,
+  },
+  input: {
+    width: "100%",
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
+
+  padding15: {
+    padding: 15,
   },
   rowOnly: { flexDirection: "row" },
   rowContainer: {
@@ -142,8 +231,15 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.secondaryColor,
     borderRadius: 28,
+  },
+  button: {
+    height: height * 0.05,
+    width: width * 0.92,
+    borderRadius: moderateScale(12),
+    position: "absolute",
+    bottom: 0,
   },
 });
 
