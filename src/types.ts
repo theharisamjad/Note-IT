@@ -17,4 +17,5 @@ export interface TodoStore {
     deleteTodo: (id: number) => Promise<void>;
     setSelectedTodo: (todo : Todo | null) => void;
     filterTodos:  (filterBy: string) => void;
+    clearAllTodos: () => Promise<void>;
 }

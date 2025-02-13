@@ -33,33 +33,32 @@ const AppNavigator = () => {
           options={{
             headerTitle: "",
             header: ({ navigation, ...props }) => (
-              <Appbar.Header
-                style={{ backgroundColor: colors.secondaryColorText }}
-              >
+              <Appbar.Header style={{ backgroundColor: colors.primaryColor }}>
                 <Appbar.BackAction
+                  color={colors.white}
                   onPress={() => {
                     navigation.goBack();
                   }}
                 />
                 <Appbar.Content title="" />
-                {!selectedTodo?.completed && (
-                  <>
-                    <Appbar.Action
-                      icon="pencil"
-                      onPress={() => navigation.navigate("Add")}
-                    />
-                    <Appbar.Action
-                      icon="delete"
-                      onPress={() => {
-                        selectedTodo &&
-                          selectedTodo?.id &&
-                          deleteTodo(selectedTodo?.id);
+                <>
+                  <Appbar.Action
+                    color={colors.white}
+                    icon="pencil"
+                    onPress={() => navigation.navigate("Add")}
+                  />
+                  <Appbar.Action
+                    color={colors.white}
+                    icon="delete"
+                    onPress={() => {
+                      selectedTodo &&
+                        selectedTodo?.id &&
+                        deleteTodo(selectedTodo?.id);
 
-                        navigation.goBack();
-                      }}
-                    />
-                  </>
-                )}
+                      navigation.goBack();
+                    }}
+                  />
+                </>
               </Appbar.Header>
             ),
           }}
@@ -68,7 +67,6 @@ const AppNavigator = () => {
           name="Add"
           component={Add}
           options={{
-            headerTitle: "",
             header: ({ navigation, ...props }) => (
               <Appbar.Header style={{ backgroundColor: colors.primaryColor }}>
                 <Appbar.BackAction
@@ -77,7 +75,10 @@ const AppNavigator = () => {
                     navigation.goBack();
                   }}
                 />
-                <Appbar.Content color={colors.white} title="" />
+                <Appbar.Content
+                  color={colors.white}
+                  title={selectedTodo ? `EDIT NOTE` : "ADD NOTE"}
+                />
               </Appbar.Header>
             ),
           }}

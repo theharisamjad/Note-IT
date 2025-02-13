@@ -45,6 +45,9 @@ const store: StateCreator<TodoStore> = (set, get) => ({
     set({ todos: updatedTodos, originalTodos: updatedTodos }); // Update both lists
     await AsyncStorage.setItem('todos', JSON.stringify(updatedTodos));
   },
+  clearAllTodos: async () => {
+    await AsyncStorage.removeItem('todos', () => console.log('todos cleared'))
+  },
    // Set the selected todo
    setSelectedTodo: (todo: Todo | null) => set({ selectedTodo: todo }),
    filterTodos : (filterBy: string) => {

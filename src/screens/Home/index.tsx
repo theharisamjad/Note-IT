@@ -38,12 +38,10 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
     deleteTodo,
     setSelectedTodo,
     filterTodos,
+    clearAllTodos,
   } = useStore();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<"All" | "Completed">(
-    "All"
-  );
 
   // Load todos from AsyncStorage on component mount
   useEffect(() => {
@@ -76,7 +74,6 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   const handleFilterSelect = (filter: "All" | "Completed") => {
-    setSelectedFilter(filter);
     filterTodos(filter);
     setIsFilterModalVisible(false); // Close the modal after selection
   };
@@ -90,10 +87,8 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
           navigation.navigate("Details");
         }}
         onLongPress={() => {
-          if (!todo.completed) {
-            openModal();
-            setSelectedTodo(todo);
-          }
+          openModal();
+          setSelectedTodo(todo);
         }}
       >
         <View
@@ -107,7 +102,9 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
           ]}
         >
           <View style={styles.rowContainer}>
-            <Text style={styles.todoItemName}>{todo?.title}</Text>
+            <Text numberOfLines={1} style={styles.todoItemName}>
+              {todo?.title}
+            </Text>
             {!todo?.completed ? <DueImage /> : <Completed />}
           </View>
           <Text numberOfLines={2} style={styles.todoItemDescription}>
@@ -201,6 +198,7 @@ const styles = StyleSheet.create({
     fontSize: sizes.small,
   },
   todoItemName: {
+    width: "90%",
     color: colors.white,
     fontFamily: fonts.regular,
     fontSize: sizes.large,
