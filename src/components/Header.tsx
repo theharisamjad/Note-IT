@@ -14,7 +14,6 @@ const HeaderHome: React.FC<HeaderHome> = ({ navigation }) => {
   return (
     <View style={styles.headerContainer}>
       <TodoImage />
-      <SettingsImage onPress={() => console.log("settings")} />
     </View>
   );
 };
