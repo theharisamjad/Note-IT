@@ -2,7 +2,9 @@
 
 A simple Todo app built with **React Native**, **Expo**, and **Zustand** for state management. This project was created to learn and explore modern tools for building mobile applications.
 
-![App Screenshot](./screenshots/screenshot.png) <!-- Add a screenshot if available -->
+## Screenshots
+![App Screenshot 1](./screenshots/screenshot1.png)
+![App Screenshot 2](./screenshots/screenshot4.png)
 
 ## Features
 - Add, Edit, Delete, filter, and complete tasks.
