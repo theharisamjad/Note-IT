@@ -21,6 +21,7 @@ import FilterImage from "../../assets/images/filter.svg";
 import DueImage from "../../assets/images/clock.svg";
 import { fonts } from "../../constants/fonts";
 import { Todo } from "../../types";
+import FilterModal from "../../components/FilterModal";
 
 const { width, height } = Dimensions.get("window");
 
@@ -36,8 +37,13 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
     toggleTodo,
     deleteTodo,
     setSelectedTodo,
+    filterTodos,
   } = useStore();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<"All" | "Completed">(
+    "All"
+  );
 
   // Load todos from AsyncStorage on component mount
   useEffect(() => {
@@ -67,6 +73,12 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
       Alert.alert("Task Completed", "The task has been marked as complete.");
       closeModal();
     }
+  };
+
+  const handleFilterSelect = (filter: "All" | "Completed") => {
+    setSelectedFilter(filter);
+    filterTodos(filter);
+    setIsFilterModalVisible(false); // Close the modal after selection
   };
 
   const TodoItem = (todo: Todo) => {
@@ -117,13 +129,18 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
         onDelete={handleDelete}
         onComplete={handleComplete}
       />
+      <FilterModal
+        isVisible={isFilterModalVisible}
+        onClose={() => setIsFilterModalVisible(false)}
+        onSelectFilter={handleFilterSelect}
+      />
       <View style={styles.padding15}>
         <View style={[styles.rowContainer, styles.rowBottomMargin]}>
           <View style={styles.rowOnly}>
             <UnionImage />
             <Text style={styles.listTodoHeading}>LIST OF TODO</Text>
           </View>
-          {/* <FilterImage /> */}
+          <FilterImage onPress={() => setIsFilterModalVisible(true)} />
         </View>
         <FlatList
           data={todos}
