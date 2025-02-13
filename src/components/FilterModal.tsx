@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { sizes } from "../constants/sizes";
 import { fonts } from "../constants/fonts";
 
@@ -21,25 +28,27 @@ const FilterModal = ({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <TouchableOpacity
-            style={styles.filterOption}
-            onPress={() => onSelectFilter("All")}
-          >
-            <Text style={styles.filterText}>All</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.filterOption}
-            onPress={() => onSelectFilter("Completed")}
-          >
-            <Text style={styles.filterText}>Completed</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.filterOption}
+              onPress={() => onSelectFilter("All")}
+            >
+              <Text style={styles.filterText}>All</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.filterOption}
+              onPress={() => onSelectFilter("Completed")}
+            >
+              <Text style={styles.filterText}>Completed</Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity> */}
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
