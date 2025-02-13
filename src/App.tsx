@@ -2,9 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
+import {
+  PaperProvider,
+  MD3LightTheme as DefaultTheme,
+} from "react-native-paper";
 import AppNavigator from "./navigation/AppNavigator";
 import useFonts from "./hooks/useFonts";
+import { colors } from "./constants/colors";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -48,7 +52,9 @@ const App: React.FC = () => {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
-        <AppNavigator />
+        <PaperProvider>
+          <AppNavigator />
+        </PaperProvider>
       </SafeAreaView>
     </GestureHandlerRootView>
   );

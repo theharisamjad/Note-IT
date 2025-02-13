@@ -10,7 +10,6 @@ import Modal from "react-native-modal";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { colors } from "../constants/colors";
 import { fonts } from "../constants/fonts";
-import { verticalScale } from "react-native-size-matters";
 
 // Optional: Configure calendar locale (e.g., for month/day names)
 LocaleConfig.locales["en"] = {

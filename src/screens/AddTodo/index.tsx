@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomTouchableInput from "../../components/CustomTouchableInput";
 import { Button } from "react-native-paper";
@@ -18,6 +18,7 @@ import CalendarModal from "../../components/CalendarModal";
 import { useStore } from "../../store";
 import { moderateScale, scale } from "react-native-size-matters";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,13 +27,32 @@ type AddScreenProps = {
 };
 
 const AddTodo: React.FC<AddScreenProps> = ({ navigation }) => {
-  const { addTodo } = useStore();
+  const { selectedTodo, addTodo, editTodo, setSelectedTodo } = useStore();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (selectedTodo) {
+      setTitle(selectedTodo.title);
+      setDescription(selectedTodo.description);
+      selectedTodo &&
+        selectedTodo.dateString &&
+        setSelectedDate(selectedTodo.dateString);
+    }
+  }, []);
+
+  // // Clear selected todo when the screen loses focus
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     return () => {
+  //       setSelectedTodo(null);
+  //     };
+  //   }, [])
+  // );
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -53,7 +73,7 @@ const AddTodo: React.FC<AddScreenProps> = ({ navigation }) => {
     setDescription("");
   };
 
-  const addTodoToList = () => {
+  const checkError = () => {
     // Reset errors
     setTitleError(false);
     setDescriptionError(false);
@@ -65,6 +85,10 @@ const AddTodo: React.FC<AddScreenProps> = ({ navigation }) => {
     if (!description.trim()) {
       setDescriptionError(true);
     }
+  };
+
+  const addTodoToList = () => {
+    checkError();
 
     if (title.trim() && description.trim()) {
       const todo = {
@@ -72,10 +96,23 @@ const AddTodo: React.FC<AddScreenProps> = ({ navigation }) => {
         title: title,
         description,
         dateString: selectedDate,
-        date: new Date(selectedDate),
       };
       addTodo(todo);
       navigation.goBack();
+      clearStateItems();
+    }
+  };
+
+  const editTodoItem = () => {
+    checkError();
+    if (title.trim() && description.trim() && selectedTodo?.id) {
+      const todo = {
+        id: selectedTodo?.id,
+        title: title,
+        description,
+      };
+      editTodo(todo);
+      navigation.popToTop();
       clearStateItems();
     }
   };
@@ -124,17 +161,18 @@ const AddTodo: React.FC<AddScreenProps> = ({ navigation }) => {
             onPress={openModal}
             iconName="calendar" // Icon on the right
             iconColor={colors.white}
+            disabled={selectedTodo ? true : false}
           />
 
           <Button
             mode="contained"
-            onPress={addTodoToList}
+            onPress={selectedTodo ? editTodoItem : addTodoToList}
             buttonColor={colors.white}
             textColor={colors.primaryColor}
             labelStyle={{ fontFamily: fonts.regular }}
             style={styles.button}
           >
-            ADD TODO
+            {selectedTodo ? "EDIT TODO" : "ADD TODO"}
           </Button>
         </View>
       </TouchableWithoutFeedback>

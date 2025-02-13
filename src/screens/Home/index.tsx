@@ -28,15 +28,15 @@ type HomeScreenProps = {
   navigation: StackNavigationProp<any, any>;
 };
 
-const defaultTodoItem = {
-  id: null,
-  title: "",
-  description: "",
-};
-
 const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const { todos, loadTodos, toggleTodo, deleteTodo } = useStore();
-  const [currentTodo, setCurrentTodo] = useState<Todo>(defaultTodoItem);
+  const {
+    todos,
+    selectedTodo,
+    loadTodos,
+    toggleTodo,
+    deleteTodo,
+    setSelectedTodo,
+  } = useStore();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   // Load todos from AsyncStorage on component mount
@@ -50,22 +50,20 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const closeModal = () => {
     setIsModalVisible(false);
-    setCurrentTodo(defaultTodoItem);
+    setSelectedTodo(null);
   };
 
   const handleDelete = () => {
-    const { id } = currentTodo;
-    if (id) {
-      deleteTodo(id);
+    if (selectedTodo && selectedTodo?.id) {
+      deleteTodo(selectedTodo.id);
       Alert.alert("Task Deleted", "The task has been deleted.");
       closeModal();
     }
   };
 
   const handleComplete = () => {
-    const { id } = currentTodo;
-    if (id) {
-      toggleTodo(id);
+    if (selectedTodo && selectedTodo?.id) {
+      toggleTodo(selectedTodo.id);
       Alert.alert("Task Completed", "The task has been marked as complete.");
       closeModal();
     }
@@ -75,10 +73,14 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
     return (
       <TouchableRipple
         style={styles.touchableContainer}
+        onPress={() => {
+          setSelectedTodo(todo);
+          navigation.navigate("Details");
+        }}
         onLongPress={() => {
           if (!todo.completed) {
             openModal();
-            setCurrentTodo(todo);
+            setSelectedTodo(todo);
           }
         }}
       >
@@ -121,7 +123,7 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
             <UnionImage />
             <Text style={styles.listTodoHeading}>LIST OF TODO</Text>
           </View>
-          <FilterImage />
+          {/* <FilterImage /> */}
         </View>
         <FlatList
           data={todos}
@@ -135,7 +137,10 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
         icon="plus"
         color={colors.white}
         rippleColor={"rgba(0, 0, 0, 0.1)"}
-        onPress={() => navigation.navigate("Add")}
+        onPress={() => {
+          setSelectedTodo(null);
+          navigation.navigate("Add");
+        }}
       />
     </View>
   );

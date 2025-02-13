@@ -9,6 +9,7 @@ type CustomTouchableInputProps = {
   onPress: () => void; // Function to call when the input is pressed
   iconName: string; // Icon name (from Material Community Icons)
   iconColor?: string; // Optional icon color
+  disabled?: boolean;
 };
 
 const CustomTouchableInput = ({
@@ -16,9 +17,14 @@ const CustomTouchableInput = ({
   onPress,
   iconName,
   iconColor = "#000",
+  disabled = false,
 }: CustomTouchableInputProps) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
+    <TouchableOpacity
+      disabled={disabled}
+      onPress={onPress}
+      style={styles.container}
+    >
       <View style={styles.innerContainer}>
         <Text style={styles.label}>{label}</Text>
         <IconButton
