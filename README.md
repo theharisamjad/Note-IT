@@ -31,7 +31,7 @@ A simple Todo app built with **React Native**, **Expo**, and **Zustand** for sta
 
 ### Installation
 1. **Clone the repository**:
-   `git clone https://github.com/haris-0525/TodoApp.git`
+   `git clone https://github.com/theharisamjad/Note-IT.git`
    `cd TodoApp`
 2. Install dependencies:
  `npm install`
@@ -46,7 +46,7 @@ A simple Todo app built with **React Native**, **Expo**, and **Zustand** for sta
 Contributions are welcome! If you'd like to contribute, please follow these steps:
 
 1. Fork the repository:
- `git clone https://github.com/haris-0525/TodoApp.git`
+ `git clone https://github.com/haris-0525/Note-IT.git`
  `cd TodoApp`
 3. Create a new branch:
 `git checkout -b feature/your-feature`
